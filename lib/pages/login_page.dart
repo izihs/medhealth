@@ -1,41 +1,37 @@
 import 'dart:convert';
-//import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:medhealth/network/api/url_api.dart';
-import 'package:medhealth/pages/login_page.dart';
+import 'package:medhealth/pages/register_page.dart';
 import 'package:medhealth/theme.dart';
 import 'package:medhealth/widget/button_primary.dart';
 import 'package:medhealth/widget/general_logo_space.dart';
-import 'package:http/http.dart' as http;
 
-class RegisterPage extends StatefulWidget {
+import '../main_page.dart';
+
+class LoginPages extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginPagesState createState() => _LoginPagesState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController fullNameController = TextEditingController();
+class _LoginPagesState extends State<LoginPages> {
   TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   bool _secureText = true;
+
   showHide() {
     setState(() {
       _secureText = !_secureText;
     });
   }
 
-  registerSubmit() async {
-    var registerUrl = Uri.parse(BASEURL.apiRegister);
-    final response = await http.post(registerUrl, body: {
-      "fullname": fullNameController.text,
+  submitLogin() async {
+    var urlLogin = Uri.parse(BASEURL.apiLogin);
+    final response = await http.post(urlLogin, body: {
       "email": emailController.text,
-      "phone": phoneController.text,
-      "address": addressController.text,
-      "password": passwordController.text,
+      "password": passwordController.text
     });
     final data = jsonDecode(response.body);
     int value = data['value'];
@@ -52,13 +48,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginPages()),
+                                builder: (context) => MainPages()),
                             (route) => false);
                       },
                       child: Text("Ok"))
                 ],
               ));
-      setState(() {});
     } else {
       showDialog(
           context: context,
@@ -74,7 +69,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ));
     }
-    setState(() {});
   }
 
   @override
@@ -90,13 +84,16 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 100,
+                ),
                 Text(
-                  "REGISTER",
+                  "LOGIN",
                   style: regulerTextStyle.copyWith(fontSize: 25),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  "Register new your account",
+                  "Login into your account",
                   style: regulerTextStyle.copyWith(
                       fontSize: 15, color: greyLightColor),
                 ),
@@ -104,33 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 24,
                 ),
                 //Note :: Text Field
-                Container(
-                  padding: EdgeInsets.only(left: 16),
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0x40000000),
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            spreadRadius: 0)
-                      ],
-                      color: whiteColor),
-                  width: MediaQuery.of(context).size.width,
-                  child: TextField(
-                    controller: fullNameController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Full Name",
-                      hintStyle: lightTextStyle.copyWith(
-                          fontSize: 15, color: greyLightColor),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
+
                 Container(
                   padding: EdgeInsets.only(left: 16),
                   height: 50,
@@ -158,60 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(
                   height: 24,
                 ),
-                Container(
-                  padding: EdgeInsets.only(left: 16),
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0x40000000),
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            spreadRadius: 0)
-                      ],
-                      color: whiteColor),
-                  width: MediaQuery.of(context).size.width,
-                  child: TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Phone",
-                      hintStyle: lightTextStyle.copyWith(
-                          fontSize: 15, color: greyLightColor),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 16),
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0x40000000),
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            spreadRadius: 0)
-                      ],
-                      color: whiteColor),
-                  width: MediaQuery.of(context).size.width,
-                  child: TextField(
-                    controller: addressController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Home Address",
-                      hintStyle: lightTextStyle.copyWith(
-                          fontSize: 15, color: greyLightColor),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
+
                 Container(
                   padding: EdgeInsets.only(left: 16),
                   height: 50,
@@ -255,12 +173,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: ButtonPrimary(
-                    text: "REGISTER",
+                    text: "LOGIN",
                     onTap: () {
-                      if (fullNameController.text.isEmpty ||
-                          emailController.text.isEmpty ||
-                          phoneController.text.isEmpty ||
-                          addressController.text.isEmpty ||
+                      if (emailController.text.isEmpty ||
                           passwordController.text.isEmpty) {
                         showDialog(
                             context: context,
@@ -276,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ],
                                 ));
                       } else {
-                        registerSubmit();
+                        submitLogin();
                       }
                     },
                   ),
@@ -288,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account? ",
+                      "Don't have an account? ",
                       style: lightTextStyle.copyWith(
                           color: greyLightColor, fontSize: 15),
                     ),
@@ -297,11 +212,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginPages()),
+                                builder: (context) => RegisterPage()),
                             (route) => false);
                       },
                       child: Text(
-                        "Login Now",
+                        "Create account",
                         style: boldTextStyle.copyWith(
                             color: greenColor, fontSize: 15),
                       ),
