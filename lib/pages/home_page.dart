@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:medhealth/network/api/url_api.dart';
 import 'package:medhealth/network/model/product_model.dart';
+import 'package:medhealth/pages/datail_product.dart';
+import 'package:medhealth/pages/search_product.dart';
 import 'package:medhealth/theme.dart';
 import 'package:medhealth/widget/card_category.dart';
 import 'package:medhealth/widget/card_product.dart';
@@ -93,22 +95,29 @@ class _HomePagesState extends State<HomePages> {
             SizedBox(
               height: 24,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-              height: 55,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xffe4faf0)),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Color(0xffb1d8b2),
-                    ),
-                    hintText: "Search medicine...",
-                    hintStyle:
-                        regulerTextStyle.copyWith(color: Color(0xffb1d8b2))),
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SearchProduct()));
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                height: 55,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xffe4faf0)),
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Color(0xffb1d8b2),
+                      ),
+                      hintText: "Search medicine...",
+                      hintStyle:
+                          regulerTextStyle.copyWith(color: Color(0xffb1d8b2))),
+                ),
               ),
             ),
             SizedBox(
@@ -165,10 +174,18 @@ class _HomePagesState extends State<HomePages> {
                             mainAxisSpacing: 16),
                         itemBuilder: (context, i) {
                           final y = listCategory[index].product[i];
-                          return CardProduct(
-                            nameProduct: y.nameProduct,
-                            imageProduct: y.imageProduct,
-                            price: y.price,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailProduct(y)));
+                            },
+                            child: CardProduct(
+                              nameProduct: y.nameProduct,
+                              imageProduct: y.imageProduct,
+                              price: y.price,
+                            ),
                           );
                         })
                 : GridView.builder(
@@ -183,10 +200,18 @@ class _HomePagesState extends State<HomePages> {
                         mainAxisSpacing: 16),
                     itemBuilder: (context, i) {
                       final y = listProduct[i];
-                      return CardProduct(
-                        nameProduct: y.nameProduct,
-                        imageProduct: y.imageProduct,
-                        price: y.price,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailProduct(y)));
+                        },
+                        child: CardProduct(
+                          nameProduct: y.nameProduct,
+                          imageProduct: y.imageProduct,
+                          price: y.price,
+                        ),
                       );
                     })
           ],

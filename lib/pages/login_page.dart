@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:medhealth/network/api/url_api.dart';
+import 'package:medhealth/network/model/pref_profile_model.dart';
 import 'package:medhealth/pages/register_page.dart';
 import 'package:medhealth/theme.dart';
 import 'package:medhealth/widget/button_primary.dart';
 import 'package:medhealth/widget/general_logo_space.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main_page.dart';
 
@@ -36,7 +38,15 @@ class _LoginPagesState extends State<LoginPages> {
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
+//digunakan ketika berhasil login
+    String idUser = data['user_id'];
+    String name = data['name'];
+    String email = data['email'];
+    String phone = data['phone'];
+    String address = data['address'];
+    String createdAt = data['created_at'];
     if (value == 1) {
+      savePref(idUser, name, email, phone, address, createdAt);
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -68,7 +78,21 @@ class _LoginPagesState extends State<LoginPages> {
                       child: Text("Ok"))
                 ],
               ));
+      setState(() {});
     }
+  }
+
+  savePref(String idUser, String name, String email, String phone,
+      String address, String createdAt) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      sharedPreferences.setString(PrefProfile.idUser, idUser);
+      sharedPreferences.setString(PrefProfile.name, name);
+      sharedPreferences.setString(PrefProfile.email, email);
+      sharedPreferences.setString(PrefProfile.phone, phone);
+      sharedPreferences.setString(PrefProfile.address, address);
+      sharedPreferences.setString(PrefProfile.createdAt, createdAt);
+    });
   }
 
   @override
