@@ -5,4 +5,7 @@ class BASEURL {
   static String categoryWitProduct =
       "http://$ipAddress/medhealth_db/get_product_with_category.php";
   static String getProduct = "http://$ipAddress/medhealth_db/get_product.php";
+  static String addToCart = "http://$ipAddress/medhealth_db/add_to_cart.php";
+  static String getProductCart =
+      "http://$ipAddress/medhealth_db/get_cart.php?userID=";
 }

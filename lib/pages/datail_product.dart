@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medhealth/main_page.dart';
+import 'package:medhealth/network/api/url_api.dart';
+import 'package:medhealth/network/model/pref_profile_model.dart';
 import 'package:medhealth/network/model/product_model.dart';
 import 'package:medhealth/widget/button_primary.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme.dart';
 
@@ -15,6 +22,67 @@ class DetailProduct extends StatefulWidget {
 
 class _DetailProductState extends State<DetailProduct> {
   final priceFormat = NumberFormat("#,##0", "EN_US");
+
+  String userID;
+  getPref() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      userID = sharedPreferences.getString(PrefProfile.idUser);
+    });
+  }
+
+  addToCart() async {
+    var urlAddToCart = Uri.parse(BASEURL.addToCart);
+    final response = await http.post(urlAddToCart, body: {
+      "id_user": userID,
+      "id_product": widget.productModel.idProduct,
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String message = data['message'];
+    if (value == 1) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Information"),
+                content: Text(message),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainPages()),
+                            (route) => false);
+                      },
+                      child: Text("Ok"))
+                ],
+              ));
+      setState(() {});
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Information"),
+                content: Text(message),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Ok"))
+                ],
+              ));
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +162,9 @@ class _DetailProductState extends State<DetailProduct> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: ButtonPrimary(
-                      onTap: () {},
+                      onTap: () {
+                        addToCart();
+                      },
                       text: "ADD TO CART",
                     ),
                   )

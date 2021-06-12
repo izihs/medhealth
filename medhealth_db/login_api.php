@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if ($query_login) {
             $response['value'] = 1;
             $response['message'] = "Yeay, Login is succesfull.";
+            $response['user_id'] = $cek_user_result['id_user'];
+            $response['name'] = $cek_user_result['name'];
+            $response['email'] = $cek_user_result['email'];
+            $response['phone'] = $cek_user_result['phone'];
+            $response['address'] = $cek_user_result['address'];
+            $response['created_at'] = $cek_user_result['created_at'];
             echo json_encode($response);
         } else {
             $response['value'] = 2;

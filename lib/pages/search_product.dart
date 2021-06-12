@@ -49,7 +49,9 @@ class _SearchProductState extends State<SearchProduct> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
+
     super.initState();
     getProduct();
   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:medhealth/network/api/url_api.dart';
 import 'package:medhealth/network/model/product_model.dart';
+import 'package:medhealth/pages/cart_pages.dart';
 import 'package:medhealth/pages/datail_product.dart';
 import 'package:medhealth/pages/search_product.dart';
 import 'package:medhealth/theme.dart';
@@ -84,7 +85,10 @@ class _HomePagesState extends State<HomePages> {
                   ],
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CartPages()));
+                  },
                   icon: Icon(
                     Icons.shopping_cart_outlined,
                     color: greenColor,
