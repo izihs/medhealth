@@ -8,9 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_product = $_POST['id_product'];
 
     $cekCart = mysqli_query($connection, "SELECT * FROM cart WHERE id_user = '$id_user' AND id_product = '$id_product'") or die("Query error : " . mysqli_error($connection));
-    $resultCekCart = mysqli_fetch_array ($cekCart);
+    $resultCekCart = mysqli_fetch_array($cekCart);
 
-    if($resultCekCart) {
+    if ($resultCekCart) {
         $response['value'] = 2;
         $response['message'] = "Sorry, product has been selected";
         echo json_encode($response);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $insertToCart = "INSERT INTO cart VALUE ('','$id_user','$id_product','1','$fetchPrice', NOW())";
 
-        if (mysqli_query($connection, $insertToCart)){
+        if (mysqli_query($connection, $insertToCart)) {
             $response['value'] = 1;
             $response['message'] = "Yeay, product added to cart success";
             echo json_encode($response);

@@ -22,7 +22,7 @@ class _HomePagesState extends State<HomePages> {
   List<CategoryWithProduct> listCategory = [];
   getCategory() async {
     listCategory.clear();
-    var urlCategory = Uri.parse(BASEURL.categoryWitProduct);
+    var urlCategory = Uri.parse(BASEURL.categoryWithProduct);
     final response = await http.get(urlCategory);
     if (response.statusCode == 200) {
       setState(() {
