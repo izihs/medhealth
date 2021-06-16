@@ -2,7 +2,6 @@
 require "config.php";
 
 $response = array();
-
 $cek_category = mysqli_query($connection, "SELECT * FROM category_product");
 
 while ($row_category = mysqli_fetch_array($cek_category)) {

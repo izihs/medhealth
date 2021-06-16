@@ -1,8 +1,7 @@
 <?php
-
 require "config.php";
-$response = array();
 
+$response = array();
 $userID = $_GET['userID'];
 
 $selectCart = mysqli_query($connection, "SELECT cart.id_cart, cart.quantity, cart.price, product.name, product.image FROM cart JOIN product on 

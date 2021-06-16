@@ -1,9 +1,7 @@
 <?php
-
 require'config.php';
 
 $response = array();
-
 $cek_product = mysqli_query($connection, "SELECT * FROM product WHERE status = '1'");
 
 while ($row_product = mysqli_fetch_array($cek_product)) {
