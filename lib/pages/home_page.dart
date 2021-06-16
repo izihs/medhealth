@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:medhealth/network/api/url_api.dart';
+import 'package:medhealth/network/model/pref_profile_model.dart';
 import 'package:medhealth/network/model/product_model.dart';
 import 'package:medhealth/pages/cart_pages.dart';
 import 'package:medhealth/pages/datail_product.dart';
@@ -10,6 +11,7 @@ import 'package:medhealth/theme.dart';
 import 'package:medhealth/widget/card_category.dart';
 import 'package:medhealth/widget/card_product.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePages extends StatefulWidget {
   @override
@@ -32,6 +34,7 @@ class _HomePagesState extends State<HomePages> {
         }
       });
       getProduct();
+      totalCart();
     }
   }
 
@@ -50,9 +53,32 @@ class _HomePagesState extends State<HomePages> {
     }
   }
 
+  String userID;
+  getPref() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      userID = sharedPreferences.getString(PrefProfile.idUser);
+    });
+  }
+
+  var jumlahCart = "0";
+  totalCart() async {
+    var urlGetTotalCart = Uri.parse(BASEURL.getTotalCart + userID);
+    final response = await http.get(urlGetTotalCart);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)[0];
+      String jumlah = data['Jumlah'];
+      setState(() {
+        jumlahCart = jumlah;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getPref();
     getCategory();
   }
 
@@ -84,15 +110,41 @@ class _HomePagesState extends State<HomePages> {
                     )
                   ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CartPages()));
-                  },
-                  icon: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: greenColor,
-                  ),
+                Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPages(totalCart)));
+                      },
+                      icon: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: greenColor,
+                      ),
+                    ),
+                    jumlahCart == "0"
+                        ? SizedBox()
+                        : Positioned(
+                            right: 10,
+                            top: 10,
+                            child: Container(
+                              height: 14,
+                              width: 14,
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: Center(
+                                child: Text(
+                                  jumlahCart,
+                                  style: regulerTextStyle.copyWith(
+                                      color: whiteColor, fontSize: 10),
+                                ),
+                              ),
+                            ),
+                          )
+                  ],
                 )
               ],
             ),

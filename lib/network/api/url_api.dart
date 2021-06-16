@@ -12,4 +12,7 @@ class BASEURL {
       "http://$ipAddress/medhealth_db/update_quantity.php";
   static String totalPriceCart =
       "http://$ipAddress/medhealth_db/get_total_price.php?userID=";
+  static String getTotalCart =
+      "http://$ipAddress/medhealth_db/total_cart.php?userID=";
+  static String checkout = "http://$ipAddress/medhealth_db/checkout.php";
 }
